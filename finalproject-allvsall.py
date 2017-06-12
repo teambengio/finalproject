@@ -716,7 +716,7 @@ def train_and_test_allvsall(X_train,T_train,X_test,T_test,digits,n, model=0):
                 if (model == 0):
                     cb_allvsall_dummy_k, cb_test_allvsall_k = train_and_test_bayes(X_train_allvsall,T_train_allvsall,X_test,T_test,digits_allvsall,V_allvsall,mu_allvsall,n)
                 if (model == 1):
-                    cb_allvsall_dummy_k, cb_test_allvsall_k = train_and_test_bayes(X_train_allvsall,T_train_allvsall,X_test,T_test,digits_allvsall,V_allvsall,mu_allvsall,n)
+                    cb_allvsall_dummy_k, cb_test_allvsall_k = train_and_test_linear(X_train_allvsall,T_train_allvsall,X_test,T_test,digits_allvsall,V_allvsall,mu_allvsall,n)
                 cb_test_allvsall_arr = np.concatenate((cb_test_allvsall_arr,cb_test_allvsall_k))
                 k = k+1
     
