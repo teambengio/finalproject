@@ -661,9 +661,11 @@ def train_linear_classifier(Xa,T) :
     Wt = np.dot(Xa_pinv,T)
     return Wt
 
-def linear_classify(Xa,Wt) :
+def linear_classify(Xa,Wt,digits) :
     T_pred =  np.dot(Xa,Wt)
-    return np.argmax(T_pred, axis=1)
+    Xc =  np.argmax(T_pred, axis=1)
+    return(digits[Xc])
+    
     
 def train_and_test_linear(X_train,T_train,X_test,T_test,digits,V,mu,n):
     #print "Training Classifier with {} PC".format(n)
@@ -674,14 +676,14 @@ def train_and_test_linear(X_train,T_train,X_test,T_test,digits,V,mu,n):
     
     Xa = augment(P)
     Wt = train_linear_classifier(Xa,Tk)
-    T_pred = linear_classify(Xa,Wt)
+    T_pred = linear_classify(Xa,Wt,digits)
      
     #print "Testing  Classifier with {} PC".format(n)
     Z_test = X_test - mu
     P_test = np.dot(Z_test,V[:,:n])
 
     Xa_test = augment(P_test)
-    T_pred_test = linear_classify(Xa_test,Wt)
+    T_pred_test = linear_classify(Xa_test,Wt,digits)
     
     return T_pred, T_pred_test
     
@@ -802,25 +804,26 @@ except IOError:
     timeList_linear_allvsall = []
     for n in range(1,maxNumPC+1) :
         
-        myTime, myAccuracy = apply_classifier(numPC=n,kesler_switch=0,model=0)
-        accList_bayes_onevsall.append(myAccuracy)
-        timeList_bayes_onevsall.append(myTime)    
-        print "model=0 kesler_switch=0 numPC=",n,"myTime=",myTime,"myAccurancy=",myAccuracy
-        
-        myTime, myAccuracy = apply_classifier(numPC=n,kesler_switch=1,model=0)
-        accList_bayes_allvsall.append(myAccuracy)
-        timeList_bayes_allvsall.append(myTime)    
-        print "model=0 kesler_switch=1 numPC=",n,"myTime=",myTime,"myAccurancy=",myAccuracy
         
         myTime, myAccuracy = apply_classifier(numPC=n,kesler_switch=0,model=1)
         accList_linear_onevsall.append(myAccuracy)
         timeList_linear_onevsall.append(myTime)    
-        print "model=1 kesler_switch=0 numPC=",n,"myTime=",myTime,"myAccurancy=",myAccuracy
+        print "model=linear policy=onevsall numPC=",n,"myTime=",myTime,"myAccurancy=",myAccuracy
         
         myTime, myAccuracy = apply_classifier(numPC=n,kesler_switch=1,model=1)
         accList_linear_allvsall.append(myAccuracy)
         timeList_linear_allvsall.append(myTime)    
-        print "model=1 kesler_switch=1 numPC=",n,"myTime=",myTime,"myAccurancy=",myAccuracy
+        print "model=linear policy=allvsall numPC=",n,"myTime=",myTime,"myAccurancy=",myAccuracy
+        
+        myTime, myAccuracy = apply_classifier(numPC=n,kesler_switch=0,model=0)
+        accList_bayes_onevsall.append(myAccuracy)
+        timeList_bayes_onevsall.append(myTime)    
+        print "model=bayes policy=onevsall numPC=",n,"myTime=",myTime,"myAccurancy=",myAccuracy
+        
+        myTime, myAccuracy = apply_classifier(numPC=n,kesler_switch=1,model=0)
+        accList_bayes_allvsall.append(myAccuracy)
+        timeList_bayes_allvsall.append(myTime)    
+        print "model=bayes policy=allvsall numPC=",n,"myTime=",myTime,"myAccurancy=",myAccuracy
         
         #print "Time for training with {} PC          = {} seconds".format(n,myTime)    
         #print "Accuracy for training data with {} PC = {}".format(n,accuracy_train)
